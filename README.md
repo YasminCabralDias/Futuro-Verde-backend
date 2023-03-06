@@ -1,40 +1,57 @@
 # projeto-Digital-Business-Enablement
 
-Fazer a descrição da API
-
-Exp (PiggyBank): Uma Api para o sistema de controle de gastos pessoais
+Uma Api para o sistema da aplicação Futuro Verde.
 
 
 ## Endpoints
 
-Exp (PiggyBank)
-- Despesas
-    - [Cadastrar](#cadastrar-despesa)
+- Usuários
+    - [Cadastrar](#cadastrar-usuario)
+    - Apagar
+    - Alterar
+    - Mostrar detalhes
+- Receitas
+    - [Cadastrar](#cadastrar-receita)
     - Listar todas
     - Apagar
     - Alterar
-    - Mostrar os detalhes
-- Contas
-    - Cadastrar
-    - Listar todas
-    - Apagar
-    - Alterar
-    - Mostrar os detalhes
-- Categorias
+    - Mostrar detalhes
 
-### Cadastrar Despesa
+### Cadastrar usuário 
 
 `POST` /piggybank/api/despesa
 
 | campo |         tipo            |       obrigatório        |               descrição                        |
 |-------|-------------------------|--------------------------|------------------------------------------------|
-| valor |        decimal          |          sim             | é o valor da despesa, deve ser maior que zero  |
-| categoria_id |        int          |          sim             | é o id de uma categoria previamente cadastrada |
+| nome |                 |          sim             | é o nome do usuário  |
+| e-mail |                 |          sim             | é o e-mail do usuário |
+| senha |                 |          sim             | é a senha do usuário |
+
 
 
 **Exemplo de corpo do request**
 
 ```js
+{
+    "nome": "Yasmin Dias",
+    "e-mail": "yasmincd102@gmail.com",
+    "senha": "abcd1234"
+    
+}
+```
+
+**Códigos de resposta**
+
+
+| código | descrição 
+|-|-
+| 201 | usuário cadastrado com sucesso
+| 400 | erro na validação dos dados da requisição
+
+---
+
+
+
 {
     "valor": 100.00,
     "categoria": {

@@ -103,18 +103,3 @@ Uma Api para o sistema da aplicação Futuro Verde.
 ---
 
 
-
-{
-    "valor": 100.00,
-    "categoria": {
-        "categoria_id" : 1,
-        "nome" : "lazer"
-    },
-    "conta" : {
-        "conta_id" : 1,
-        "nome" : "itaú"
-    }
-    "data": "2023-01-27",
-    "descricao": "cinema com os amigos"
-}
-```

@@ -9,7 +9,7 @@ Uma Api para o sistema da aplicação Futuro Verde.
     - [Cadastrar](#cadastrar-usuário)
     - Apagar
     - Alterar
-    - Mostrar detalhes
+    - [Mostrar detalhes](#detalhar-usuário)
 - Receitas
     - [Cadastrar](#cadastrar-receita)
     - Listar todas
@@ -51,7 +51,7 @@ Uma Api para o sistema da aplicação Futuro Verde.
 ---
 
 
-### Detalhar informações do usuário
+### Detalhar usuário
 
 `GET` /futuroverde/api/usuario/nome
 

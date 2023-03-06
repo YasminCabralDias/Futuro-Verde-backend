@@ -15,7 +15,7 @@ Uma Api para o sistema da aplicação Futuro Verde.
     - Listar todas
     - Apagar
     - Alterar
-    - Mostrar detalhes
+    - [Mostrar detalhes](#detalhar-receita)
 
 ### Cadastrar usuário 
 
@@ -51,6 +51,28 @@ Uma Api para o sistema da aplicação Futuro Verde.
 ---
 
 
+### Detalhar informações do usuário
+
+`GET` /futuroverde/api/usuario/nome
+
+**Exemplo de corpo da resposta**
+
+```js
+{
+    "nome": "Yasmin Dias",
+    "e-mail": "yasmincd102@gmail.com"
+    
+}
+```
+
+**Códigos de Resposta**
+
+| código | descrição 
+|-|-
+| 200 | a requisição foi bem sucedida
+| 404 | não foi encontrado um usuário com o nome informado
+
+
 ### cadastrar receita 
 
 `POST` /futuroverde/api/cadastro/receita
@@ -68,7 +90,7 @@ Uma Api para o sistema da aplicação Futuro Verde.
 
 ```js
 {
-    "nome": "Escondidinho de carne vegetal",
+    "nome": "Escondidinho de carne de soja",
     "ingredientes": "250 g de proteína de soja texturizada em flocos, 
     1 kg de batata,
     1 cebola média, 
@@ -101,5 +123,43 @@ Uma Api para o sistema da aplicação Futuro Verde.
 | 400 | erro na validação dos dados da requisição
 
 ---
+
+### Detalhar receita
+`GET` /futuroverde/api/receita/{nome}
+
+**Exemplo de corpo da resposta**
+
+```js
+{
+    "nome": "Escondidinho de carne de soja",
+    "ingredientes": "250 g de proteína de soja texturizada em flocos, 
+    1 kg de batata,
+    1 cebola média, 
+    1 colher de alho desidratado, 
+    Molho de tomate, 
+    2 colheres de sopa, de manteiga, Sal a gosto, 
+    Pimenta-do-reino a gosto,
+    1 gema de ovo",
+    "modo de preparo ": "Deixe a proteína de soja de molho em água fervente por 20 minutos.
+    Enquanto isso, prepare um refogado com a cebola, o alho, o sal, a pimenta e o molho de tomate quando os temperos já estiverem refogados.
+    Deixe levantar fervura e acrescente a proteína de soja.
+    Cozinhe por aproximadamente 5 minutos, desligue o fogo e reserve.
+    Após retirar a casca da batata e cortá-la em pequenos pedaços, cozinhe com água e sal por aproximadamente 30 minutos ou até deixar a batata bem cozida.
+    Retire do fogo, retire a água, amasse as batatas com um garfo.
+    Acenda o fogo e adicione a manteiga, mexendo sempre até que se transforme em purê bem molinho.
+    Caso não deseje deixar o purê mais cremoso, pode acrescentar leite.
+    Coloque a proteína de soja em uma forma cobrindo todo o fundo.
+    Em seguida, acrescente o purê de batata, cobrindo toda a proteína de soja.
+    Pincele com a gema e leve ao forno em temperatura média até dourar.",
+    "imagem": "images/receita"  
+}
+```
+
+**Códigos de Resposta**
+
+| código | descrição 
+|-|-
+| 200 | a requisição foi bem sucedida
+| 404 | não foi encontrada uma receita com o nome informado
 
 

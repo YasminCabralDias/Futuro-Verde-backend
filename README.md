@@ -72,6 +72,7 @@ Uma Api para o sistema da aplicação Futuro Verde.
 | 200 | a requisição foi bem sucedida
 | 404 | não foi encontrado um usuário com o nome informado
 
+---
 
 ### cadastrar receita 
 

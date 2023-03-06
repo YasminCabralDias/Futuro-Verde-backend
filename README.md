@@ -6,7 +6,7 @@ Uma Api para o sistema da aplicação Futuro Verde.
 ## Endpoints
 
 - Usuários
-    - [Cadastrar](#cadastrar-usuario)
+    - [Cadastrar](#cadastrar-usuário)
     - Apagar
     - Alterar
     - Mostrar detalhes

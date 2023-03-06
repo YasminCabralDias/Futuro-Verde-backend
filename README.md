@@ -69,7 +69,14 @@ Uma Api para o sistema da aplicação Futuro Verde.
 ```js
 {
     "nome": "Escondidinho de carne vegetal",
-    "ingredientes": "250 g de proteína de soja texturizada em flocos, 1 kg de batata, 1 cebola média, 1 colher de alho desidratado, Molho de tomate, 2 colheres de sopa, de manteiga, Sal a gosto, Pimenta-do-reino a gosto,1 gema de ovo",
+    "ingredientes": "250 g de proteína de soja texturizada em flocos, 
+    1 kg de batata,
+    1 cebola média, 
+    1 colher de alho desidratado, 
+    Molho de tomate, 
+    2 colheres de sopa, de manteiga, Sal a gosto, 
+    Pimenta-do-reino a gosto,
+    1 gema de ovo",
     "modo de preparo ": "Deixe a proteína de soja de molho em água fervente por 20 minutos.
     Enquanto isso, prepare um refogado com a cebola, o alho, o sal, a pimenta e o molho de tomate quando os temperos já estiverem refogados.
     Deixe levantar fervura e acrescente a proteína de soja.

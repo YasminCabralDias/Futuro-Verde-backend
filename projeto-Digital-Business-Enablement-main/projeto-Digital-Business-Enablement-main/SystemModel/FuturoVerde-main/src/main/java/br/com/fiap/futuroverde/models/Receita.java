@@ -1,20 +1,31 @@
 package br.com.fiap.futuroverde.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Receita {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 	private String nome;
 	private String ingredientes;
 	private String modoPreparo;
 	private String imagem;
-	private int id;
 	
+	protected Receita(){
+		
+	}
 	
-	public Receita(String nome, String ingredientes, String modoPreparo, String imagem, int Id) {
+	public Receita(String nome, String ingredientes, String modoPreparo, String imagem) {
 		this.nome = nome;
 		this.ingredientes = ingredientes;
 		this.modoPreparo = modoPreparo;
 		this.imagem = imagem;
-		this.id = id;
+	
 	}
 	
 	

@@ -1,18 +1,30 @@
 package br.com.fiap.futuroverde.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Usuario {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	
+	private Integer id;
 	private String nome;
 	private String email;
 	private String senha;
-	private int id;
+	
+	protected Usuario(){
+		
+	}
 	
 		
-	public Usuario(String nome, String email, String senha, int id) {
+	public Usuario(String nome, String email, String senha) {
 		this.nome = nome;
 		this.email = email;
-		this.senha = senha;
-		this.id = id;
+		this.senha = senha;		
 	}
 	public String getNome() {
 		return nome;

@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import br.com.fiap.futuroverde.models.RestError;
 import br.com.fiap.futuroverde.models.RestValidationError;
 
+//atualizado
 @RestControllerAdvice
 public class RestExceptionHandler {
     Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);

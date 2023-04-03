@@ -2,7 +2,7 @@ package br.com.fiap.futuroverde.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
+//import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.futuroverde.models.Usuario;
 import br.com.fiap.futuroverde.repository.UsuarioRepository;
+import jakarta.validation.Valid;
 
 
 
@@ -29,7 +31,7 @@ public class UsuarioController {
 
 
     @PostMapping("/api/cadastro/usuario")
-    public ResponseEntity<Usuario> cadastrar(@RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> cadastrar(@RequestBody @Valid Usuario usuario){
         log.info("cadastrando usuário: " + usuario);
 
         repository.save(usuario);
@@ -41,35 +43,36 @@ public class UsuarioController {
     public ResponseEntity<Usuario> mostrar (@PathVariable int id){
         log.info("Buscando usuário utilizando id: " + id);
 
-        var usuarioEncontrado = repository.findById(id);
+        var usuarioEncontrado = repository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
    
         
-        return ResponseEntity.ok(usuarioEncontrado.get());
+        return ResponseEntity.ok(usuarioEncontrado);
     }
 
     @PutMapping("/api/usuario/{id}")
-    public ResponseEntity<Usuario> atualizar (@PathVariable int id, @RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> atualizar (@PathVariable int id, @RequestBody @Valid Usuario usuario){
         log.info("alterando infos do usuário utilizando id " + id);
 
-        var usuarioaEncontrado = repository.findById(id);
-        var usuarioAtualizado = usuarioaEncontrado.get();
+        repository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        
+        usuario.setId(id);
+        repository.save(usuario);
 
-        BeanUtils.copyProperties(usuario, usuarioAtualizado, "id");
-
-        repository.save(usuarioAtualizado);
-
-        return ResponseEntity.ok(usuarioAtualizado);
+        return ResponseEntity.ok(usuario);
         
     }
 
 
     @DeleteMapping("/api/usuario/{id}")
-    public ResponseEntity<Usuario> deletar (@PathVariable int id){
+    public ResponseEntity<Usuario> deletar (@PathVariable int id, @Valid Usuario usuario){
         log.info("apagando usuário utilizando id " + id);
 
-        var usuarioaEncontrado = repository.findById(id);
+        var usuarioaEncontrado = repository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "usuário não encontrado"));
 
-        repository.delete(usuarioaEncontrado.get());
+        repository.delete(usuarioaEncontrado);
 
         return ResponseEntity.noContent().build();
     }

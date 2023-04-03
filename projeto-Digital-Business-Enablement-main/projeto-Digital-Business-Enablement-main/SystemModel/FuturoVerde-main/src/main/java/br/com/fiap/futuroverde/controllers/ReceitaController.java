@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,9 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import br.com.fiap.futuroverde.exception.RestNotFoundException;
 import br.com.fiap.futuroverde.models.Receita;
+import br.com.fiap.futuroverde.models.RestError;
 import br.com.fiap.futuroverde.repository.ReceitaRepository;
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -28,9 +33,11 @@ public class ReceitaController {
     @Autowired
     ReceitaRepository repository;
 
+    
+
 
     @PostMapping("/api/cadastro/receita")
-    public ResponseEntity<Receita> cadastrar(@RequestBody Receita receita){
+    public ResponseEntity<Object> cadastrar(@RequestBody @Valid Receita receita){
         log.info("cadastrando receita: " + receita);
 
         repository.save(receita);
@@ -40,30 +47,31 @@ public class ReceitaController {
 
 
     @GetMapping("/api/receita/{id}")
-    public ResponseEntity<Receita> mostrar (@PathVariable int id){
+    public ResponseEntity<Receita> mostrar (@PathVariable  int id){
         log.info("Buscando receita utilizando id: " + id);
 
-        var receitaEncontrada = repository.findById(id);
         //Criando receita para teste
         //Receita r = new Receita("Brigadeiro", "Leite condensado, chocolate em pó", "Mexer tudo em fogo baixo", "images/brigadeiro");
-        
-        return ResponseEntity.ok(receitaEncontrada.get());
+
+        var receitaEncontrada = repository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada"));     
+        return ResponseEntity.ok(receitaEncontrada);
 
 
     }
 
     @PutMapping("/api/receita/{id}")
-    public ResponseEntity<Receita> atualizar (@PathVariable int id, @RequestBody Receita receita){
+    public ResponseEntity<Receita> atualizar (@PathVariable int id, @RequestBody @Valid Receita receita){
         log.info("alterando infos da receita utilizando id " + id);
 
-        var receitaEncontrada = repository.findById(id);
-        var receitaAtualizada = receitaEncontrada.get();
+        repository.findById(id)
+        .orElseThrow(() -> new RestNotFoundException("receita não encontrada"));
 
-        BeanUtils.copyProperties(receita, receitaAtualizada, "id");
+        
+        receita.setId(id);
+        repository.save(receita);
 
-        repository.save(receitaAtualizada);
-
-        return ResponseEntity.ok(receitaAtualizada);
+        return ResponseEntity.ok(receita);
     }
 
 
@@ -71,10 +79,15 @@ public class ReceitaController {
     public ResponseEntity<Receita> deletar (@PathVariable int id){
         log.info("apagando receita utilizando id " + id);
 
-        var receitaEncontrada = repository.findById(id);
+        var receitaEncontrada = repository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "receita não encontrada"));
+        
 
-        repository.delete(receitaEncontrada.get());
+
+        repository.delete(receitaEncontrada);
 
         return ResponseEntity.noContent().build();
+
+        
     }   
 }

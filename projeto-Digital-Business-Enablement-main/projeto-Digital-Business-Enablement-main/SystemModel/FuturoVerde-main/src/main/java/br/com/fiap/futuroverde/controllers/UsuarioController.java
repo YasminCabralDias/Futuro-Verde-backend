@@ -66,7 +66,7 @@ public class UsuarioController {
 
 
     @DeleteMapping("/api/usuario/{id}")
-    public ResponseEntity<Usuario> deletar (@PathVariable int id, @Valid Usuario usuario){
+    public ResponseEntity<Usuario> deletar (@PathVariable int id){
         log.info("apagando usuário utilizando id " + id);
 
         var usuarioaEncontrado = repository.findById(id)

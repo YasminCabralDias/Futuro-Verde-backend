@@ -1,5 +1,5 @@
 package br.com.fiap.futuroverde.controllers;
-
+//atualizado
 
 import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.slf4j.Logger;
@@ -54,7 +54,7 @@ public class ReceitaController {
         //Receita r = new Receita("Brigadeiro", "Leite condensado, chocolate em pó", "Mexer tudo em fogo baixo", "images/brigadeiro");
 
         var receitaEncontrada = repository.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receita não encontrada"));     
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "receita não encontrada"));     
         return ResponseEntity.ok(receitaEncontrada);
 
 
@@ -65,7 +65,7 @@ public class ReceitaController {
         log.info("alterando infos da receita utilizando id " + id);
 
         repository.findById(id)
-        .orElseThrow(() -> new RestNotFoundException("receita não encontrada"));
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "receita não encontrada"));
 
         
         receita.setId(id);

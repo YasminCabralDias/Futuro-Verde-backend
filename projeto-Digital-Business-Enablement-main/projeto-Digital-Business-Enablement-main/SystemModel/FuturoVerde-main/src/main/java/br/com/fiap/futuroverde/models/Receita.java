@@ -4,8 +4,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@Data
+@NoArgsConstructor
+
 
 @Entity
 public class Receita {
@@ -22,55 +31,9 @@ public class Receita {
 	@NotBlank @Size(min=10, max=200)
 	private String imagem;
 	
-	protected Receita(){
-		
-	}
-	
-	public Receita(String nome, String ingredientes, String modoPreparo, String imagem) {
-		this.nome = nome;
-		this.ingredientes = ingredientes;
-		this.modoPreparo = modoPreparo;
-		this.imagem = imagem;
-	
-	}
-	
-	
-	public String getNome() {
-		return nome;
-	}
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-	public String getIngredientes() {
-		return ingredientes;
-	}
-	public void setIngredientes(String ingredientes) {
-		this.ingredientes = ingredientes;
-	}
-	public String getModoPreparo() {
-		return modoPreparo;
-	}
-	public void setModoPreparo(String modoPreparo) {
-		this.modoPreparo = modoPreparo;
-	}
-	public String getImagem() {
-		return imagem;
-	}
-	public void setImagem(String imagem) {
-		this.imagem = imagem;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	@Override
-    public String toString() {
-        return "Nome da receita: " + nome + "Ingredientes: " + ingredientes + "Modo de preparo: " +
-    modoPreparo + "Imagem: " + imagem + "Id: " + id;
-	}
+	@NotNull
+	@ManyToOne
+	private Usuario usuario;
 	
 
 }

@@ -1,14 +1,14 @@
 package br.com.fiap.futuroverde.controllers;
 //atualizado
 
-import org.apache.catalina.startup.ClassLoaderFactory.Repository;
+//import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
+//import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
+//import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import br.com.fiap.futuroverde.exception.RestNotFoundException;
+//import br.com.fiap.futuroverde.exception.RestNotFoundException;
 import br.com.fiap.futuroverde.models.Receita;
-import br.com.fiap.futuroverde.models.RestError;
+//import br.com.fiap.futuroverde.models.RestError;
 import br.com.fiap.futuroverde.repository.ReceitaRepository;
+import br.com.fiap.futuroverde.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 
 
@@ -31,7 +32,10 @@ public class ReceitaController {
     Logger log = LoggerFactory.getLogger(UsuarioController.class);
 
     @Autowired
-    ReceitaRepository repository;
+    ReceitaRepository receitaRepository;
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     
 
@@ -40,7 +44,8 @@ public class ReceitaController {
     public ResponseEntity<Object> cadastrar(@RequestBody @Valid Receita receita){
         log.info("cadastrando receita: " + receita);
 
-        repository.save(receita);
+        receitaRepository.save(receita);
+        receita.setUsuario(usuarioRepository.findById(receita.getUsuario().getId()).get());
         return ResponseEntity.status(HttpStatus.CREATED).body(receita);
     }
 
@@ -52,10 +57,8 @@ public class ReceitaController {
 
         //Criando receita para teste
         //Receita r = new Receita("Brigadeiro", "Leite condensado, chocolate em pó", "Mexer tudo em fogo baixo", "images/brigadeiro");
-
-        var receitaEncontrada = repository.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "receita não encontrada"));     
-        return ResponseEntity.ok(receitaEncontrada);
+   
+        return ResponseEntity.ok(getReceita(id));
 
 
     }
@@ -64,12 +67,11 @@ public class ReceitaController {
     public ResponseEntity<Receita> atualizar (@PathVariable int id, @RequestBody @Valid Receita receita){
         log.info("alterando infos da receita utilizando id " + id);
 
-        repository.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "receita não encontrada"));
+        getReceita(id);
 
-        
         receita.setId(id);
-        repository.save(receita);
+        
+        receitaRepository.save(receita);
 
         return ResponseEntity.ok(receita);
     }
@@ -79,15 +81,16 @@ public class ReceitaController {
     public ResponseEntity<Receita> deletar (@PathVariable int id){
         log.info("apagando receita utilizando id " + id);
 
-        var receitaEncontrada = repository.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "receita não encontrada"));
-        
-
-
-        repository.delete(receitaEncontrada);
+        receitaRepository.delete(getReceita(id));
 
         return ResponseEntity.noContent().build();
 
-        
-    }   
+    }
+
+
+    private Receita getReceita (Integer id) {
+        return receitaRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "receita não encontrada"));
+    }
+      
 }

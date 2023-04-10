@@ -27,14 +27,14 @@ public class UsuarioController {
     Logger log = LoggerFactory.getLogger(UsuarioController.class);
 
     @Autowired
-    UsuarioRepository repository;
+    UsuarioRepository usuarioRepository;
 
 
     @PostMapping("/api/cadastro/usuario")
     public ResponseEntity<Usuario> cadastrar(@RequestBody @Valid Usuario usuario){
         log.info("cadastrando usuário: " + usuario);
 
-        repository.save(usuario);
+        usuarioRepository.save(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
     }
 
@@ -43,22 +43,17 @@ public class UsuarioController {
     public ResponseEntity<Usuario> mostrar (@PathVariable int id){
         log.info("Buscando usuário utilizando id: " + id);
 
-        var usuarioEncontrado = repository.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
-   
-        
-        return ResponseEntity.ok(usuarioEncontrado);
+        return ResponseEntity.ok(getUsuario(id));
     }
 
     @PutMapping("/api/usuario/{id}")
     public ResponseEntity<Usuario> atualizar (@PathVariable int id, @RequestBody @Valid Usuario usuario){
         log.info("alterando infos do usuário utilizando id " + id);
 
-        repository.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        getUsuario(id);
         
         usuario.setId(id);
-        repository.save(usuario);
+        usuarioRepository.save(usuario);
 
         return ResponseEntity.ok(usuario);
         
@@ -69,14 +64,17 @@ public class UsuarioController {
     public ResponseEntity<Usuario> deletar (@PathVariable int id){
         log.info("apagando usuário utilizando id " + id);
 
-        var usuarioaEncontrado = repository.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "usuário não encontrado"));
 
-        repository.delete(usuarioaEncontrado);
+        usuarioRepository.delete(getUsuario(id));
 
         return ResponseEntity.noContent().build();
     }
 
+
+    private Usuario getUsuario(Integer id) {
+        return usuarioRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "usuário não encontrado"));
+    }
 
 
 

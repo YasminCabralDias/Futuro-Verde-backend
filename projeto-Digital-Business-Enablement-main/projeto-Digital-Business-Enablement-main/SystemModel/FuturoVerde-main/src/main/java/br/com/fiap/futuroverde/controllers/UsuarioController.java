@@ -1,5 +1,7 @@
 package br.com.fiap.futuroverde.controllers;
 
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.springframework.beans.BeanUtils;
@@ -28,6 +30,7 @@ public class UsuarioController {
 
     @Autowired
     UsuarioRepository usuarioRepository;
+
 
 
     @PostMapping("/api/cadastro/usuario")

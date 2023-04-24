@@ -4,6 +4,8 @@ package br.com.fiap.futuroverde.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.text.html.parser.Entity;
+
 //import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.validation.BindingResult;
@@ -49,14 +55,19 @@ public class ReceitaController {
     @Autowired
     UsuarioRepository usuarioRepository;
 
+    @Autowired
+    PagedResourcesAssembler<Object> assembler;
+
     @GetMapping("/api/receitas")
-    public Page <Receita> index(
+    public PagedModel<EntityModel<Object>> index(
         @RequestParam(required = false) String nome,
         @PageableDefault (size = 4) Pageable pageable){
-    
-        if(nome == null) return receitaRepository.findAll(pageable);
 
-        return receitaRepository.findByNomeContaining(nome, pageable);
+        Page<Receita> receitas = (nome== null)? 
+        receitaRepository.findAll(pageable): 
+        receitaRepository.findByNomeContaining(nome, pageable);
+
+        return assembler.toModel(receitas.map(Receita::toModel));   
     }
 
 
@@ -66,25 +77,31 @@ public class ReceitaController {
 
         receitaRepository.save(receita);
         receita.setUsuario(usuarioRepository.findById(receita.getUsuario().getId()).get());
-        return ResponseEntity.status(HttpStatus.CREATED).body(receita);
+        return ResponseEntity
+        .created(receita.toModel().getRequiredLink("self").toUri())
+        .body(receita.toModel());
     }
 
 
 
     @GetMapping("/api/receita/{id}")
-    public ResponseEntity<Receita> mostrar (@PathVariable  int id){
+    public EntityModel<Receita> mostrar (@PathVariable  int id){
         log.info("Buscando receita utilizando id: " + id);
 
         //Criando receita para teste
         //Receita r = new Receita("Brigadeiro", "Leite condensado, chocolate em pó", "Mexer tudo em fogo baixo", "images/brigadeiro");
-   
-        return ResponseEntity.ok(getReceita(id));
+
+        var receita = getReceita(id);
+
+
+    
+        return receita.toModel();
 
 
     }
 
     @PutMapping("/api/receita/{id}")
-    public ResponseEntity<Receita> atualizar (@PathVariable int id, @RequestBody @Valid Receita receita){
+    public EntityModel <Receita> atualizar (@PathVariable int id, @RequestBody @Valid Receita receita){
         log.info("alterando infos da receita utilizando id " + id);
 
         getReceita(id);
@@ -93,7 +110,7 @@ public class ReceitaController {
         
         receitaRepository.save(receita);
 
-        return ResponseEntity.ok(receita);
+        return receita.toModel();
     }
 
 

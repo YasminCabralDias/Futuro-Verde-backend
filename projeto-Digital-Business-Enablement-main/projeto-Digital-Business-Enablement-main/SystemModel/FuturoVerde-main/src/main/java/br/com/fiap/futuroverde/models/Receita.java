@@ -1,5 +1,9 @@
 package br.com.fiap.futuroverde.models;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import br.com.fiap.futuroverde.controllers.ReceitaController;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,6 +43,15 @@ public class Receita {
 	@NotNull
 	@ManyToOne
 	private Usuario usuario;
+
+	public EntityModel<Receita> toModel(){
+		return EntityModel.of(
+            this,
+            linkTo(methodOn(ReceitaController.class).mostrar(id)).withSelfRel(),
+            linkTo(methodOn(ReceitaController.class).index(" ", Pageable.unpaged())).withRel("all")    
+
+        );
+	}
 	
 
 }

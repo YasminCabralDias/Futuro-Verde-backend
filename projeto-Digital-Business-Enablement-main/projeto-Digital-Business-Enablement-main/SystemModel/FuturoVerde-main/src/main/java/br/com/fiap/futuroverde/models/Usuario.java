@@ -1,8 +1,11 @@
 package br.com.fiap.futuroverde.models;
 
+import org.springframework.hateoas.EntityModel;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import br.com.fiap.futuroverde.controllers.UsuarioController;
 //import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +17,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.*;
+
 
 
 @Data
@@ -35,7 +40,18 @@ public class Usuario {
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String senha;
 	
+	public EntityModel<Usuario> toModel(){
+		return EntityModel.of(
+            this,
+            linkTo(methodOn(UsuarioController.class).mostrar(id)).withSelfRel());
+	}
+
 	
+
+	
+
+
+
 	
 			
 }

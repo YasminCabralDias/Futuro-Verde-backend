@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,10 +17,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
 import br.com.fiap.futuroverde.models.Usuario;
 import br.com.fiap.futuroverde.repository.UsuarioRepository;
 import jakarta.validation.Valid;
+
 
 
 
@@ -32,25 +33,29 @@ public class UsuarioController {
     UsuarioRepository usuarioRepository;
 
 
+    
 
     @PostMapping("/api/cadastro/usuario")
-    public ResponseEntity<Usuario> cadastrar(@RequestBody @Valid Usuario usuario){
+    public ResponseEntity<Object> cadastrar(@RequestBody @Valid Usuario usuario){
         log.info("cadastrando usuário: " + usuario);
 
         usuarioRepository.save(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
+        return ResponseEntity
+        .created(usuario.toModel().getRequiredLink("self").toUri())
+        .body(usuario.toModel());
     }
 
 
     @GetMapping("/api/usuario/{id}")
-    public ResponseEntity<Usuario> mostrar (@PathVariable int id){
+    public EntityModel<Usuario> mostrar (@PathVariable int id){
         log.info("Buscando usuário utilizando id: " + id);
 
-        return ResponseEntity.ok(getUsuario(id));
+        var usuario = getUsuario(id);
+        return usuario.toModel();
     }
 
     @PutMapping("/api/usuario/{id}")
-    public ResponseEntity<Usuario> atualizar (@PathVariable int id, @RequestBody @Valid Usuario usuario){
+    public EntityModel <Usuario> atualizar (@PathVariable int id, @RequestBody @Valid Usuario usuario){
         log.info("alterando infos do usuário utilizando id " + id);
 
         getUsuario(id);
@@ -58,7 +63,7 @@ public class UsuarioController {
         usuario.setId(id);
         usuarioRepository.save(usuario);
 
-        return ResponseEntity.ok(usuario);
+        return usuario.toModel();
         
     }
 

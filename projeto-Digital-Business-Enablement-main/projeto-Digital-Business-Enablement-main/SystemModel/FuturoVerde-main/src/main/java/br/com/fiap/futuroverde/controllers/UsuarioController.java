@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import io.swagger.v3.oas.annotations.tags.Tag;
 import br.com.fiap.futuroverde.models.Credencial;
 import br.com.fiap.futuroverde.models.Usuario;
 import br.com.fiap.futuroverde.repository.UsuarioRepository;
@@ -19,6 +19,7 @@ import jakarta.validation.Valid;
 
 
 @RestController
+@Tag(name = "auth")
 public class UsuarioController {
 
     @Autowired

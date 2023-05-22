@@ -10,16 +10,17 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
-
-import br.com.fiap.futuroverde.models.RestError;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import br.com.fiap.futuroverde.models.RestValidationError;
 
-//atualizado
+
 @RestControllerAdvice
 public class RestExceptionHandler {
     Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);
     
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<List<RestValidationError>> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e){
         log.error("erro: argumento inválido");
         List<RestValidationError> erros = new ArrayList<>();

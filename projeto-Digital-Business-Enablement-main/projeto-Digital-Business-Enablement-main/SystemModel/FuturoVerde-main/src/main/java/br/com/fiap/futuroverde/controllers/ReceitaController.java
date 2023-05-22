@@ -10,6 +10,7 @@ import javax.swing.text.html.parser.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.springframework.beans.BeanUtils;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,12 +38,17 @@ import br.com.fiap.futuroverde.models.Receita;
 //import br.com.fiap.futuroverde.models.RestError;
 import br.com.fiap.futuroverde.repository.ReceitaRepository;
 import br.com.fiap.futuroverde.repository.UsuarioRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 
 @RestController
 @Slf4j
+@SecurityRequirement(name = "bearer-key")
 public class ReceitaController {
 
     Logger log = LoggerFactory.getLogger(UsuarioController.class);
@@ -61,7 +67,7 @@ public class ReceitaController {
     @GetMapping("/api/receitas")
     public PagedModel<EntityModel<Object>> index(
         @RequestParam(required = false) String nome,
-        @PageableDefault (size = 4) Pageable pageable){
+        @ParameterObject @PageableDefault(size = 5) Pageable pageable){
 
         Page<Receita> receitas = (nome== null)? 
         receitaRepository.findAll(pageable): 
@@ -72,9 +78,12 @@ public class ReceitaController {
 
 
     @PostMapping("/api/cadastro/receita")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "receita cadastrada com sucesso"),
+        @ApiResponse(responseCode = "400", description = "erro na validação dos dados da requisição")
+    })
     public ResponseEntity<Object> cadastrar(@RequestBody @Valid Receita receita){
         log.info("cadastrando receita: " + receita);
-
         receitaRepository.save(receita);
         receita.setUsuario(usuarioRepository.findById(receita.getUsuario().getId()).get());
         return ResponseEntity
@@ -85,6 +94,10 @@ public class ReceitaController {
 
 
     @GetMapping("/api/receita/{id}")
+    @Operation(
+        summary = "Detalhes da receita",
+        description = "Retorna os dados de uma receita"
+    )
     public EntityModel<Receita> mostrar (@PathVariable  int id){
         log.info("Buscando receita utilizando id: " + id);
 
